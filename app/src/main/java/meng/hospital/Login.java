@@ -1,6 +1,8 @@
 package meng.hospital;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +26,9 @@ public class Login extends AppCompatActivity {
   private EditText password_ET;
   private Button login_Btn;
 
+  SharedPreferences loginPreferences;
+  SharedPreferences.Editor loginEditor;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -33,6 +38,8 @@ public class Login extends AppCompatActivity {
     username_ET = findViewById(R.id.usernameEditText);
     password_ET = findViewById(R.id.passwordEditText);
     login_Btn = findViewById(R.id.loginButton);
+
+    load_name_and_pwd();
 
     login_Btn.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -52,6 +59,8 @@ public class Login extends AppCompatActivity {
       Toast.makeText(Login.this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
       return;
     }
+
+    save_name_and_pwd(username, password);
 
     new Thread(new Runnable() {
       @Override
@@ -113,5 +122,20 @@ public class Login extends AppCompatActivity {
         }
       }
     }).start();
+  }
+
+  private void load_name_and_pwd() {
+    loginPreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
+    username_ET.setText(loginPreferences.getString("userName", null));
+    password_ET.setText(loginPreferences.getString("userPwd", null));
+  }
+
+  private void save_name_and_pwd(String userName, String userPwd) {
+    loginEditor = loginPreferences.edit();
+
+    loginEditor.putString("userName", userName);
+    loginEditor.putString("userPwd", userPwd);
+
+    loginEditor.commit();
   }
 }
