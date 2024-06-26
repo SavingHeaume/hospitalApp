@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/appointmentFragment">
+
+    <fragment
+        android:id="@+id/appointmentFragment"
+        android:name="meng.hospital.patientFragment.AppointmentFragment"
+        android:label="预约" />
+
+    <fragment
+        android:id="@+id/infoFragment"
+        android:name="meng.hospital.patientFragment.InfoFragment"
+        android:label="信息" />
+
+    <fragment
+        android:id="@+id/hospitalizationFragment"
+        android:name="meng.hospital.patientFragment.HospitalizationFragment"
+        android:label="住院" />
+
+    <fragment
+        android:id="@+id/medicalHistoryFragment"
+        android:name="meng.hospital.patientFragment.MedicalHistoryFragment"
+        android:label="病史" />
+
+</navigation>
