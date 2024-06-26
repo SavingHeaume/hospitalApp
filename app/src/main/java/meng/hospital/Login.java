@@ -77,7 +77,7 @@ public class Login extends AppCompatActivity {
           RequestBody body = RequestBody.create(JSON, json);
 
           Request request = new Request.Builder()
-                  .url("http://10.129.124.217:8088/login")
+                  .url("http://10.129.124.217:8088/android/login")
                   .post(body)
                   .build();
 
@@ -86,6 +86,7 @@ public class Login extends AppCompatActivity {
           String responseString = response.body().string();
           JSONObject responseJson = new JSONObject(responseString);
           String message = responseJson.getString("message");
+          int loginId = responseJson.getInt("loginId");
           char lastChar = message.charAt(message.length() - 1);
 
           runOnUiThread(new Runnable() {
@@ -102,6 +103,7 @@ public class Login extends AppCompatActivity {
                 case '3':
                   Toast.makeText(Login.this, "患者登录成功", Toast.LENGTH_SHORT).show();
                   Intent intent = new Intent(Login.this, Patient.class);
+                  intent.putExtra("loginId", loginId);
                   startActivity(intent);
                   break;
                 default:

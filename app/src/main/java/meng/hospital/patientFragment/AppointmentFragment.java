@@ -38,11 +38,8 @@ public class AppointmentFragment extends Fragment {
   private AutoCompleteTextView spinnerDepartment = null;
   private AutoCompleteTextView spinnerDoctor = null;
 
-//  @Override
-//  public void onCreate(Bundle savedInstanceState) {
-//    super.onCreate(savedInstanceState);
-//
-//  }
+  public String patient_name_;
+  public int patient_id_;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,6 +49,12 @@ public class AppointmentFragment extends Fragment {
     appointment_Btn = view.findViewById(R.id.button_confirm);
     spinnerDepartment = view.findViewById(R.id.spinner_department);
     spinnerDoctor = view.findViewById(R.id.spinner_doctor);
+
+    Bundle bundle = getArguments();
+    if (bundle != null) {
+      patient_id_ = bundle.getInt("patientId");
+      patient_name_ = bundle.getString("patientNae");
+    }
 
     // 从资源中获取字符串数组
     String[] departments = getResources().getStringArray(R.array.departments);
