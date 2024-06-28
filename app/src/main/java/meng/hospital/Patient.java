@@ -69,28 +69,17 @@ public class Patient extends AppCompatActivity {
     new Thread(new Runnable() {
       @Override
       public void run() {
-        String url = "http://10.129.124.217:8088/android/findPatientByLoginId";
-        JSONObject jsonObject = new JSONObject();
-        try {
-          jsonObject.put("loginId", login_id_);
-        } catch (JSONException e) {
-          throw new RuntimeException(e);
-        }
-        String json = jsonObject.toString();
+        String url = "http://10.129.124.217:8088/android/findPatientByLoginId/" + login_id_;
 
         OkHttpClient client = new OkHttpClient();
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        RequestBody body = RequestBody.create(JSON, json);
-
         Request request = new Request.Builder()
                 .url(url)
-                .post(body)
                 .build();
 
         try {
           Response response = client.newCall(request).execute();
           String responseString = response.body().string();
-          jsonObject = new JSONObject(responseString);
+          JSONObject jsonObject = new JSONObject(responseString);
 
           patient_id_ = jsonObject.getInt("patientId");
           patient_name_ = jsonObject.getString("patientName");
