@@ -108,55 +108,30 @@ public class AppointmentFragment extends Fragment {
                 .url(usl)
                 .build();
 
-        client.newCall(request).enqueue(new Callback() {
-          @Override
-          public void onFailure(@NonNull Call call, @NonNull IOException e) {
-            requireActivity().runOnUiThread(new Runnable() {
-              @Override
-              public void run() {
-                Toast.makeText(requireContext(), "查找医生数据失败", Toast.LENGTH_SHORT).show();
-              }
-            });
-          }
-
-          @Override
-          public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-            if (response.isSuccessful()) {
-              String responseData = response.body().string();
-              try {
-                JSONObject jsonObject = new JSONObject(responseData);
-                JSONArray doctorsArray = jsonObject.getJSONArray("doctors");
-
-                List<String> doctorNames = ExtracDoctorNamesAndId(doctorsArray);
-
-                requireActivity().runOnUiThread(new Runnable() {
-                  @Override
-                  public void run() {
-                    ArrayAdapter<String> doctorAdapter = new ArrayAdapter<>(requireContext(),
-                            android.R.layout.simple_dropdown_item_1line, doctorNames);
-                    spinnerDoctor.setAdapter(doctorAdapter);
-                  }
-                });
-              } catch (
-                      JSONException e) {
-                e.printStackTrace();
-                requireActivity().runOnUiThread(new Runnable() {
-                  @Override
-                  public void run() {
-                    Toast.makeText(requireContext(), "Failed to parse doctor data", Toast.LENGTH_SHORT).show();
-                  }
-                });
-              }
-            } else {
-              requireActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                  Toast.makeText(requireContext(), "Failed to fetch doctors", Toast.LENGTH_SHORT).show();
-                }
-              });
+        try {
+          Response response = client.newCall(request).execute();
+          String responseData = response.body().string();
+          JSONObject jsonObject = new JSONObject(responseData);
+          JSONArray doctorsArray = jsonObject.getJSONArray("doctors");
+          List<String> doctorNames = ExtracDoctorNamesAndId(doctorsArray);
+          requireActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+              ArrayAdapter<String> doctorAdapter = new ArrayAdapter<>(requireContext(),
+                      android.R.layout.simple_dropdown_item_1line, doctorNames);
+              spinnerDoctor.setAdapter(doctorAdapter);
             }
-          }
-        });
+          });
+
+        } catch (Exception e) {
+          requireActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+              Toast.makeText(requireContext(), "获取医生信息失败", Toast.LENGTH_SHORT).show();
+            }
+          });
+          throw new RuntimeException(e);
+        }
       }
     }).start();
   }
