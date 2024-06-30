@@ -1,5 +1,7 @@
 package meng.hospital.patientFragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -54,6 +56,8 @@ public class AppointmentFragment extends Fragment {
 
   private int expenses_array_[] = {100, 120, 80, 150, 130, 90};
 
+  private SharedPreferences patient_preferences_ = null;
+
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,11 +69,8 @@ public class AppointmentFragment extends Fragment {
     spinnerDoctor = view.findViewById(R.id.spinner_doctor);
     date_picker = view.findViewById(R.id.date_picker);
 
-    Bundle bundle = getArguments();
-    if (bundle != null) {
-      patient_id_ = bundle.getInt("patientId");
-      patient_name_ = bundle.getString("patientNae");
-    }
+    patient_preferences_ = getActivity().getSharedPreferences("patient", Context.MODE_PRIVATE);
+    patient_id_ = patient_preferences_.getInt("patientId", -1);
 
     // 从资源中获取字符串数组
     String[] departments = getResources().getStringArray(R.array.departments);

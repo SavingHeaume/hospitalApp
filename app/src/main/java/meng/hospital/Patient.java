@@ -1,6 +1,8 @@
 package meng.hospital;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -28,9 +30,12 @@ import okhttp3.Response;
 
 public class Patient extends AppCompatActivity {
 
-  public int login_id_;
-  public String patient_name_;
-  public int patient_id_;
+  private int login_id_;
+  private String patient_name_;
+  private int patient_id_;
+  SharedPreferences patient_preferences_ = null;
+  SharedPreferences.Editor patient_editor_ = null;
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +48,6 @@ public class Patient extends AppCompatActivity {
 
     getPatient();
 
-
     BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
 
     NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
@@ -54,11 +58,12 @@ public class Patient extends AppCompatActivity {
       NavController navController = navHostFragment.getNavController();
       NavigationUI.setupWithNavController(bottomNav, navController);
 
-      Bundle bundle = new Bundle();
-      bundle.putInt("patientId", patient_id_);
-      bundle.putString("patientName", patient_name_);
-
-      navController.navigate(R.id.appointmentFragment, bundle);
+//      Bundle bundle = new Bundle();
+//      bundle.putInt("patientId", patient_id_);
+//      bundle.putString("patientName", patient_name_);
+//
+//      navController.navigate(R.id.appointmentFragment, bundle);
+//      //navController.navigate(R.id.hospitalizationFragment, bundle);
     } else {
       throw new IllegalStateException("NavHostFragment not found");
     }
@@ -82,7 +87,7 @@ public class Patient extends AppCompatActivity {
           JSONObject jsonObject = new JSONObject(responseString);
 
           patient_id_ = jsonObject.getInt("patientId");
-          patient_name_ = jsonObject.getString("patientName");
+          SavePatientId();
 
         } catch (Exception e) {
           throw new RuntimeException(e);
@@ -90,5 +95,14 @@ public class Patient extends AppCompatActivity {
 
       }
     }).start();
+  }
+
+  private void SavePatientId() {
+    patient_preferences_ = getSharedPreferences("patient", Context.MODE_PRIVATE);
+    patient_editor_ = patient_preferences_.edit();
+
+    patient_editor_.putInt("patientId", patient_id_);
+
+    patient_editor_.commit();
   }
 }

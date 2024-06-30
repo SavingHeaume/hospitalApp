@@ -133,6 +133,7 @@ public class Login extends AppCompatActivity {
   }
 
   private void save_name_and_pwd(String userName, String userPwd) {
+    loginPreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
     loginEditor = loginPreferences.edit();
 
     loginEditor.putString("userName", userName);
