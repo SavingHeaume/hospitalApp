@@ -12,4 +12,6 @@
         <item>内科</item>
     </string-array>
 
+    <string name = "url">http://10.137.221.70:8088</string>
+
 </resources>

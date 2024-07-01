@@ -74,7 +74,7 @@ public class Patient extends AppCompatActivity {
     new Thread(new Runnable() {
       @Override
       public void run() {
-        String url = "http://10.129.124.217:8088/android/findPatientByLoginId/" + login_id_;
+        String url = getString(R.string.url) + "/android/findPatientByLoginId/" + login_id_;
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()

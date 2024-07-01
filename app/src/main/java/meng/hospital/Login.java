@@ -75,9 +75,10 @@ public class Login extends AppCompatActivity {
           OkHttpClient client = new OkHttpClient();
           MediaType JSON = MediaType.parse("application/json; charset=utf-8");
           RequestBody body = RequestBody.create(JSON, json);
+          String url = getString(R.string.url) + "/android/login";
 
           Request request = new Request.Builder()
-                  .url("http://10.129.124.217:8088/android/login")
+                  .url(url)
                   .post(body)
                   .build();
 

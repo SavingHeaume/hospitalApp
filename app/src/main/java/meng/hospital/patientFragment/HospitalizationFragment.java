@@ -52,7 +52,7 @@ public class HospitalizationFragment extends Fragment {
     new Thread(new Runnable() {
       @Override
       public void run() {
-        String url = "http://10.129.124.217:8088/android/hospitalization/" + patient_id_;
+        String url = getString(R.string.url) + "/android/hospitalization/" + patient_id_;
         OkHttpClient okHttpClient = new OkHttpClient();
 
         Request request = new Request.Builder()

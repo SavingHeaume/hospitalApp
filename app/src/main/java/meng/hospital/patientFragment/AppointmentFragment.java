@@ -104,7 +104,7 @@ public class AppointmentFragment extends Fragment {
       @Override
       public void run() {
         OkHttpClient client = new OkHttpClient();
-        String usl = "http://10.129.124.217:8088/doctor/" + department;
+        String usl = getString(R.string.url) + "/doctor/" + department;
         Request request = new Request.Builder()
                 .url(usl)
                 .build();
@@ -175,7 +175,7 @@ public class AppointmentFragment extends Fragment {
         }
 
         String json = jsonObject.toString();
-        String url = "http://10.129.124.217:8088/patient/appointment";
+        String url = getString(R.string.url) + "/patient/appointment";
 
         OkHttpClient okHttpClient = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=urf-8");
