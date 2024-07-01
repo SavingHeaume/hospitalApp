@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+
+        <TextView
+            android:id="@+id/record_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textAppearance="?attr/textAppearanceBody1"/>
+
+        <TextView
+            android:id="@+id/record_department"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textAppearance="?attr/textAppearanceBody1"/>
+
+        <TextView
+            android:id="@+id/record_doctor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textAppearance="?attr/textAppearanceBody1"/>
+
+        <TextView
+            android:id="@+id/record_expenses"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textAppearance="?attr/textAppearanceBody2"/>
+
+
+        <TextView
+            android:id="@+id/record_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textAppearance="?attr/textAppearanceBody2"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="生成预约挂号单"/>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
+
