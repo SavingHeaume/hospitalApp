@@ -87,6 +87,7 @@ public class Patient extends AppCompatActivity {
           JSONObject jsonObject = new JSONObject(responseString);
 
           patient_id_ = jsonObject.getInt("patientId");
+          patient_name_ = jsonObject.getString("patientName");
           SavePatientId();
 
         } catch (Exception e) {
@@ -102,6 +103,7 @@ public class Patient extends AppCompatActivity {
     patient_editor_ = patient_preferences_.edit();
 
     patient_editor_.putInt("patientId", patient_id_);
+    patient_editor_.putString("patientName", patient_name_);
 
     patient_editor_.commit();
   }

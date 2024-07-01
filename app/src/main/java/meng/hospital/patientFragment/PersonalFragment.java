@@ -2,6 +2,7 @@ package meng.hospital.patientFragment;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -20,29 +22,44 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
+import meng.hospital.Login;
 import meng.hospital.R;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 
-public class MedicalHistoryFragment extends Fragment {
+public class PersonalFragment extends Fragment {
   private int patient_id_;
+  private String patient_name_;
   private RecyclerView recyclerView;
+  private TextView account_name_text_view_ = null;
+  private Button log_out_button_ = null;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_medical_history, container, false);
+    View view = inflater.inflate(R.layout.fragment_personal, container, false);
 
     SharedPreferences patient_preferences_ = requireActivity().getSharedPreferences("patient", Context.MODE_PRIVATE);
     patient_id_ = patient_preferences_.getInt("patientId", -1);
+    patient_name_ = patient_preferences_.getString("patientName", "无姓名");
 
     recyclerView = view.findViewById(R.id.recyclerView);
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+    log_out_button_ = view.findViewById(R.id.logoutButton);
+    account_name_text_view_ = view.findViewById(R.id.accountNameTextView);
+    log_out_button_.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Intent intent = new Intent(getActivity(), Login.class);
+        startActivity(intent);
+      }
+    });
+
+    account_name_text_view_.setText("账户名称: " + patient_name_);
 
     GetMedicalHistory();
 

@@ -13,7 +13,7 @@
         android:icon="@android:drawable/ic_menu_compass"
         android:title="住院" />
     <item
-        android:id="@+id/medicalHistoryFragment"
+        android:id="@+id/personalFragment"
         android:icon="@android:drawable/ic_menu_recent_history"
         android:title="病史" />
 </menu>

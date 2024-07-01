@@ -20,8 +20,8 @@
         android:label="住院" />
 
     <fragment
-        android:id="@+id/medicalHistoryFragment"
-        android:name="meng.hospital.patientFragment.MedicalHistoryFragment"
+        android:id="@+id/personalFragment"
+        android:name="meng.hospital.patientFragment.PersonalFragment"
         android:label="病史" />
 
 </navigation>
