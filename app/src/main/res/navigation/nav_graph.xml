@@ -7,12 +7,17 @@
     <fragment
         android:id="@+id/appointmentFragment"
         android:name="meng.hospital.patientFragment.AppointmentFragment"
-        android:label="预约" />
+        android:label="挂号" />
 
     <fragment
         android:id="@+id/infoFragment"
         android:name="meng.hospital.patientFragment.InfoFragment"
         android:label="信息" />
+
+    <fragment
+        android:id="@id/AppointmentRecordFragment"
+        android:name="meng.hospital.patientFragment.AppointmentRecordFragment"
+        android:label="挂号记录" />
 
     <fragment
         android:id="@+id/hospitalizationFragment"
