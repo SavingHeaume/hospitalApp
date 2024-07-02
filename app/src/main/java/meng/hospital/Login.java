@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -22,9 +23,10 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class Login extends AppCompatActivity {
-  private EditText username_ET;
-  private EditText password_ET;
-  private Button login_Btn;
+  private EditText username_ET = null;
+  private EditText password_ET = null;
+  private Button login_Btn = null;
+  private TextView register_tv_ = null;
 
   SharedPreferences loginPreferences;
   SharedPreferences.Editor loginEditor;
@@ -38,6 +40,7 @@ public class Login extends AppCompatActivity {
     username_ET = findViewById(R.id.usernameEditText);
     password_ET = findViewById(R.id.passwordEditText);
     login_Btn = findViewById(R.id.loginButton);
+    register_tv_ = findViewById(R.id.registerTextView);
 
     load_name_and_pwd();
 
@@ -45,6 +48,14 @@ public class Login extends AppCompatActivity {
       @Override
       public void onClick(View v) {
         login();
+      }
+    });
+
+    register_tv_.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Intent intent = new Intent(Login.this, Register.class);
+        startActivity(intent);
       }
     });
   }
@@ -95,11 +106,11 @@ public class Login extends AppCompatActivity {
             public void run() {
               switch (lastChar) {
                 case '1':
-                  Toast.makeText(Login.this, "管理员登录成功", Toast.LENGTH_SHORT).show();
+                  Toast.makeText(Login.this, "管理员请使用网页端", Toast.LENGTH_SHORT).show();
 
                   break;
                 case '2':
-                  Toast.makeText(Login.this, "医生登录成功", Toast.LENGTH_SHORT).show();
+                  Toast.makeText(Login.this, "医生请使用网页端", Toast.LENGTH_SHORT).show();
                   break;
                 case '3':
                   Toast.makeText(Login.this, "患者登录成功", Toast.LENGTH_SHORT).show();

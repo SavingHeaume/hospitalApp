@@ -55,6 +55,7 @@
             android:id="@+id/get_record_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_marginTop="5dp"
             android:text="生成预约挂号单"/>
 

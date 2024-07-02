@@ -57,6 +57,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonSearch"
                     android:layout_width="match_parent"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_height="wrap_content"
                     android:text="搜索" />
 
