@@ -26,7 +26,7 @@
 
 <!--    <string name="url">http://10.129.124.217:8088</string>-->
 <!--    <string name="url">http://10.137.221.70:8088</string>-->
-<!--    <string name="url">http://192.168.160.16:8088</string>-->
-    <string name="url">http://10.147.19.80:8088</string>
+    <string name="url">http://192.168.160.16:8088</string>
+<!--    <string name="url">http://10.147.19.80:8088</string>-->
 
 </resources>

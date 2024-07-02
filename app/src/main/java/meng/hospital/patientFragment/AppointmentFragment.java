@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -92,11 +93,31 @@ public class AppointmentFragment extends Fragment {
     appointment_Btn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        if (validateInputs()) {
+          return;
+        }
         AddAppointment();
       }
     });
 
     return view;
+  }
+
+
+  private boolean validateInputs() {
+    EditText[] editTexts = {
+      requireActivity().findViewById(R.id.spinner_department),
+      requireActivity().findViewById(R.id.spinner_doctor),
+    };
+
+    for (EditText editText : editTexts) {
+      String string = editText.getText().toString();
+      if (string.isEmpty()) {
+        Toast.makeText(requireContext(), "信息不完整", Toast.LENGTH_SHORT).show();
+        return true;
+      }
+    }
+    return false;
   }
 
   private void fetchDoctorsForDepartment(String department) {
@@ -155,8 +176,8 @@ public class AppointmentFragment extends Fragment {
       @Override
       public void run() {
 
-        int day = date_picker.getDayOfMonth();
-        int month = date_picker.getMonth() + 1;
+        int day = date_picker.getDayOfMonth() + 1;
+        int month = date_picker.getMonth();
         int year = date_picker.getYear();
 
         Calendar calendar = Calendar.getInstance();

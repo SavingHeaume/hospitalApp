@@ -76,6 +76,11 @@ public class InfoFragment extends Fragment {
     button_search_.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        String s = auto_complete_search_type_.getText().toString();
+        if (s.isEmpty()) {
+          Toast.makeText(requireContext(), "搜索种类不能为空", Toast.LENGTH_SHORT).show();
+          return;
+        }
         performSearch();
       }
     });

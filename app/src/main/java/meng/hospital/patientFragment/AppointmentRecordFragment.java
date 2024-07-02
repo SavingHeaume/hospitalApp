@@ -127,7 +127,7 @@ class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder>
 
       holder.id_tv.setText("预约单号: " + record.getInt("id"));
       holder.expenses_tv.setText("费用: " + record.getString("expenses"));
-      holder.time_tv.setText("时间: " + record.getString("time"));
+      holder.time_tv.setText("时间: " + record.getString("time").substring(0, 10));
 
       holder.get_record_btn.setOnClickListener(new View.OnClickListener() {
         @Override

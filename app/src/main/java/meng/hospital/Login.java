@@ -47,6 +47,9 @@ public class Login extends AppCompatActivity {
     login_Btn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        if (validateInputs()) {
+          return;
+        }
         login();
       }
     });
@@ -60,16 +63,32 @@ public class Login extends AppCompatActivity {
     });
   }
 
+  private boolean validateInputs() {
+    EditText[] editTexts = {
+            findViewById(R.id.usernameEditText),
+            findViewById(R.id.passwordEditText)
+    };
+
+    for (EditText editText : editTexts) {
+      String string = editText.getText().toString();
+      if (string.isEmpty()) {
+        editText.setError("此字段不能为空");
+        return true;
+      }
+    }
+    return false;
+  }
+
   private void login() {
     // 获取用户输入的用户名和密码
     String username = username_ET.getText().toString().trim();
     String password = password_ET.getText().toString().trim();
 
-    // 检查用户名和密码是否为空
-    if (username.isEmpty() || password.isEmpty()) {
-      Toast.makeText(Login.this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
-      return;
-    }
+//    // 检查用户名和密码是否为空
+//    if (username.isEmpty() || password.isEmpty()) {
+//      Toast.makeText(Login.this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
+//      return;
+//    }
 
     save_name_and_pwd(username, password);
 
