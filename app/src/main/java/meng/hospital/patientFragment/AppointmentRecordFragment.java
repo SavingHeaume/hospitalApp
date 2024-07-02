@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +70,7 @@ public class AppointmentRecordFragment extends Fragment {
           requireActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-              RecordAdapter recordAdapter = new RecordAdapter(jsonArray);
+              RecordAdapter recordAdapter = new RecordAdapter(jsonArray, requireContext());
               recyclerView.setAdapter(recordAdapter);
             }
           });
@@ -85,9 +87,11 @@ public class AppointmentRecordFragment extends Fragment {
 
 class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder> {
   private JSONArray appointment_record_;
+  private Context context_;
 
-  public RecordAdapter(JSONArray appointment_record) {
+  public RecordAdapter(JSONArray appointment_record, Context context) {
     this.appointment_record_ = appointment_record;
+    this.context_ = context;
   }
 
   @NonNull
@@ -102,9 +106,11 @@ class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder>
   public void onBindViewHolder(@NonNull RecordViewHolder holder, int position) {
     try {
       JSONObject record = appointment_record_.getJSONObject(position);
-      holder.id_tv.setText("预约单号: " + record.getString("id"));
-      holder.department_tv.setText("科室: ");
-      holder.doctor_tv.setText("医生: ");
+      Integer doc_id = record.getInt("doctorid");
+
+      SetDoctor(doc_id, holder.doctor_tv, holder.department_tv);
+
+      holder.id_tv.setText("预约单号: " + record.getInt("id"));
       holder.expenses_tv.setText("费用: " + record.getString("expenses"));
       holder.time_tv.setText("时间: " + record.getString("time"));
     } catch (JSONException e) {
@@ -128,5 +134,37 @@ class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder>
       expenses_tv = itemView.findViewById(R.id.record_expenses);
       time_tv = itemView.findViewById(R.id.record_time);
     }
+  }
+
+  private void SetDoctor(Integer id, TextView doctor_tv, TextView department_tv) {
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        String url = context_.getString(R.string.url) + "/android/getDoctorById/" + id;
+        OkHttpClient okHttpClient = new OkHttpClient();
+        Request request = new Request.Builder().url(url).build();
+        try {
+          Response response = okHttpClient.newCall(request).execute();
+          String string = response.body().string();
+          JSONObject jsonObject = new JSONObject(string);
+
+          new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+              try {
+                department_tv.setText("科室: " +jsonObject.getString("department"));
+                doctor_tv.setText("医生: " +jsonObject.getString("name"));
+              } catch (JSONException e) {
+                throw new RuntimeException(e);
+              }
+            }
+          });
+
+        } catch (IOException | JSONException e) {
+          throw new RuntimeException(e);
+        }
+      }
+    }).start();
+
   }
 }
