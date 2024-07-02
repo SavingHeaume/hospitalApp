@@ -1,26 +1,41 @@
 package meng.hospital.patientFragment;
 
+import android.content.ActivityNotFoundException;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import meng.hospital.R;
 import okhttp3.OkHttpClient;
@@ -113,6 +128,18 @@ class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder>
       holder.id_tv.setText("预约单号: " + record.getInt("id"));
       holder.expenses_tv.setText("费用: " + record.getString("expenses"));
       holder.time_tv.setText("时间: " + record.getString("time"));
+
+      holder.get_record_btn.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          try {
+            GetRecordPdf(record.getInt("id"), context_);
+          } catch (JSONException e) {
+            throw new RuntimeException(e);
+          }
+        }
+      });
+
     } catch (JSONException e) {
       e.printStackTrace();
     }
@@ -125,6 +152,7 @@ class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder>
 
   public static class RecordViewHolder extends RecyclerView.ViewHolder {
     TextView id_tv, department_tv, doctor_tv, expenses_tv, time_tv;
+    Button get_record_btn;
 
     public RecordViewHolder(@NonNull View itemView) {
       super(itemView);
@@ -133,6 +161,7 @@ class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder>
       doctor_tv = itemView.findViewById(R.id.record_doctor);
       expenses_tv = itemView.findViewById(R.id.record_expenses);
       time_tv = itemView.findViewById(R.id.record_time);
+      get_record_btn = itemView.findViewById(R.id.get_record_btn);
     }
   }
 
@@ -152,8 +181,8 @@ class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder>
             @Override
             public void run() {
               try {
-                department_tv.setText("科室: " +jsonObject.getString("department"));
-                doctor_tv.setText("医生: " +jsonObject.getString("name"));
+                department_tv.setText("科室: " + jsonObject.getString("department"));
+                doctor_tv.setText("医生: " + jsonObject.getString("name"));
               } catch (JSONException e) {
                 throw new RuntimeException(e);
               }
@@ -165,6 +194,119 @@ class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordViewHolder>
         }
       }
     }).start();
-
   }
+
+  private void GetRecordPdf(Integer id, Context context) {
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        String url = context.getString(R.string.url) + "/android/getRecord/" + id;
+        OkHttpClient okHttpClient = new OkHttpClient();
+
+        Request request = new Request.Builder().url(url).build();
+
+        try {
+          Response response = okHttpClient.newCall(request).execute();
+
+          if (!"application/pdf".equals(response.header("Content-Type"))) {
+            return;
+          }
+
+          String fileName = "appointment.pdf";
+          String contentDisposition = response.header("Content-Disposition");
+          if (contentDisposition != null && contentDisposition.contains("filename=")) {
+            fileName = contentDisposition.split("filename=")[1].replaceAll("\"", "");
+          }
+
+          byte[] pdfDate = response.body().bytes();
+          Uri uri = savePdfToDownloads(context, pdfDate, fileName);
+
+          new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+              Toast.makeText(context, "PDF下载完成", Toast.LENGTH_SHORT).show();
+              openPdf(context, uri);
+            }
+          });
+
+
+        } catch (IOException e) {
+          new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+              Toast.makeText(context, "PDF下载完成", Toast.LENGTH_SHORT).show();
+            }
+          });
+          throw new RuntimeException(e);
+        }
+      }
+    }).start();
+  }
+
+
+  private static Uri savePdfToDownloads(Context context, byte[] pdfData, String fileName) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      return saveFileUsingMediaStore(context, pdfData, fileName);
+    } else {
+      return saveFileToExternalStorage(context, pdfData, fileName);
+    }
+  }
+
+  @RequiresApi(api = Build.VERSION_CODES.Q)
+  private static Uri saveFileUsingMediaStore(Context context, byte[] pdfData, String fileName) {
+    ContentValues values = new ContentValues();
+    values.put(MediaStore.Downloads.DISPLAY_NAME, fileName);
+    values.put(MediaStore.Downloads.MIME_TYPE, "application/pdf");
+    values.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
+
+    ContentResolver resolver = context.getContentResolver();
+    Uri uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+
+    if (uri != null) {
+      try (OutputStream outputStream = resolver.openOutputStream(uri)) {
+        if (outputStream != null) {
+          outputStream.write(pdfData);
+          outputStream.flush();
+          Log.d("PDF_SAVE", "PDF saved successfully to Downloads: " + fileName);
+        }
+      } catch (IOException e) {
+        Log.e("PDF_SAVE", "Error saving PDF: " + e.getMessage());
+        return null;
+      }
+    }
+    return uri;
+  }
+
+  private static Uri saveFileToExternalStorage(Context context, byte[] pdfData, String fileName) {
+    File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+    File file = new File(downloadsDir, fileName);
+
+    try (FileOutputStream fos = new FileOutputStream(file)) {
+      fos.write(pdfData);
+      fos.flush();
+      Log.d("PDF_SAVE", "PDF saved successfully to Downloads: " + file.getAbsolutePath());
+    } catch (IOException e) {
+      Log.e("PDF_SAVE", "Error saving PDF: " + e.getMessage());
+      return null;
+    }
+    return Uri.fromFile(file);
+  }
+
+  private static void openPdf(Context context, Uri pdfUri) {
+    if (pdfUri != null) {
+      Intent intent = new Intent(Intent.ACTION_VIEW);
+      intent.setDataAndType(pdfUri, "application/pdf");
+      intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+      try {
+        context.startActivity(intent);
+      } catch (ActivityNotFoundException e) {
+        Toast.makeText(context, "没有找到可以打开PDF的应用", Toast.LENGTH_LONG).show();
+      }
+    } else {
+      Toast.makeText(context, "PDF文件未能成功保存", Toast.LENGTH_LONG).show();
+    }
+  }
+
+
 }
