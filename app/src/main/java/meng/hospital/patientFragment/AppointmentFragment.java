@@ -104,7 +104,7 @@ public class AppointmentFragment extends Fragment {
   }
 
 
-  private boolean validateInputs() {
+  public boolean validateInputs() {
     EditText[] editTexts = {
       requireActivity().findViewById(R.id.spinner_department),
       requireActivity().findViewById(R.id.spinner_doctor),

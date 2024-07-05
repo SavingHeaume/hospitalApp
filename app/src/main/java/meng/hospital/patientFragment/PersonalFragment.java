@@ -66,7 +66,7 @@ public class PersonalFragment extends Fragment {
     return view;
   }
 
-  private void GetMedicalHistory() {
+  public void GetMedicalHistory() {
     new Thread(new Runnable() {
       @Override
       public void run() {

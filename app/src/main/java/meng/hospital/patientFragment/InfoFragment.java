@@ -88,7 +88,7 @@ public class InfoFragment extends Fragment {
     return view;
   }
 
-  private void performSearch() {
+  public void performSearch() {
     String searchQuery = edit_text_search_.getText().toString();
 
     new Thread(new Runnable() {
@@ -133,64 +133,33 @@ public class InfoFragment extends Fragment {
 
 }
 
-/**
- * SearchResult 类用于存储搜索结果的信息
- */
+//SearchResult 类用于存储搜索结果的信息
 class SearchResult {
-  /**
-   * 搜索结果的类型（如"医生"、"疾病"或"药品"）
-   */
+  //搜索结果的类型（如"医生"、"疾病"或"药品"）
   private String type;
-  /**
-   * 搜索结果的详细信息，以 JSONObject 形式存储
-   */
+  //搜索结果的详细信息，以 JSONObject 形式存储
   private JSONObject details;
 
-  /**
-   * 构造函数
-   *
-   * @param type    搜索结果的类型
-   * @param details 搜索结果的详细信息
-   */
   public SearchResult(String type, JSONObject details) {
     this.type = type;
     this.details = details;
   }
 
-  /**
-   * 获取搜索结果的类型
-   *
-   * @return 搜索结果的类型
-   */
   public String getType() {
     return type;
   }
 
-  /**
-   * 获取搜索结果的详细信息
-   *
-   * @return 搜索结果的详细信息，以 JSONObject 形式
-   */
   public JSONObject getDetails() {
     return details;
   }
 }
 
 
-/**
- * SearchResultAdapter 类用于管理搜索结果的 RecyclerView
- */
+//SearchResultAdapter 类用于管理搜索结果的 RecyclerView
 class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.ViewHolder> {
-  /**
-   * 存储搜索结果的列表
-   */
+  //存储搜索结果的列表
   private List<SearchResult> results;
 
-  /**
-   * 构造函数
-   *
-   * @param results 初始的搜索结果列表
-   */
   public SearchResultAdapter(List<SearchResult> results) {
     this.results = results;
   }

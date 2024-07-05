@@ -189,7 +189,7 @@ Register extends AppCompatActivity {
 
   }
 
-  private boolean validateInputs() {
+  boolean validateInputs() {
     EditText[] editTexts = {
             findViewById(R.id.nameEditText),
             findViewById(R.id.ageEditText),

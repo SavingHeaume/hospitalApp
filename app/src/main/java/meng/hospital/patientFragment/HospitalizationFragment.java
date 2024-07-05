@@ -48,7 +48,7 @@ public class HospitalizationFragment extends Fragment {
     return view;
   }
 
-  private void GetHospitalization() {
+  public void GetHospitalization() {
     new Thread(new Runnable() {
       @Override
       public void run() {

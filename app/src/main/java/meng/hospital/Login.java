@@ -63,7 +63,7 @@ public class Login extends AppCompatActivity {
     });
   }
 
-  private boolean validateInputs() {
+  boolean validateInputs() {
     EditText[] editTexts = {
             findViewById(R.id.usernameEditText),
             findViewById(R.id.passwordEditText)
@@ -157,13 +157,13 @@ public class Login extends AppCompatActivity {
     }).start();
   }
 
-  private void load_name_and_pwd() {
+  void load_name_and_pwd() {
     loginPreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
     username_ET.setText(loginPreferences.getString("userName", null));
     password_ET.setText(loginPreferences.getString("userPwd", null));
   }
 
-  private void save_name_and_pwd(String userName, String userPwd) {
+  void save_name_and_pwd(String userName, String userPwd) {
     loginPreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
     loginEditor = loginPreferences.edit();
 

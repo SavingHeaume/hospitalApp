@@ -66,7 +66,7 @@ public class AppointmentRecordFragment extends Fragment {
   }
 
 
-  private void GetAppointmentRecord() {
+  public void GetAppointmentRecord() {
     new Thread(new Runnable() {
       @Override
       public void run() {
